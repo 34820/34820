@@ -1,131 +1,116 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Minimal Interactive Web</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Minimal Interactive SPA</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
 
 <style>
-:root {
-  --bg: #0f0f14;
-  --card: rgba(255,255,255,0.06);
-  --accent: #8b5cf6;
-  --text: #f5f5f5;
+:root{
+  --bg:#0f0f14;
+  --card:rgba(255,255,255,.06);
+  --accent:#8b5cf6;
+  --text:#f5f5f5;
 }
-
-* {
-  box-sizing: border-box;
-  font-family: 'Inter', sans-serif;
-}
-
-body {
-  margin: 0;
-  background: radial-gradient(circle at top, #1a1a2e, var(--bg));
-  color: var(--text);
+*{box-sizing:border-box;font-family:Inter,sans-serif}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#1a1a2e,var(--bg));
+  color:var(--text);
 }
 
 /* NAV */
-nav {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: rgba(0,0,0,0.4);
-  backdrop-filter: blur(12px);
-  border-radius: 999px;
-  padding: 10px 24px;
-  display: flex;
-  gap: 20px;
-  z-index: 999;
+nav{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,.4);
+  backdrop-filter:blur(12px);
+  padding:10px 24px;
+  border-radius:999px;
+  display:flex;
+  gap:20px;
+  z-index:999;
+}
+nav a{
+  cursor:pointer;
+  text-decoration:none;
+  color:var(--text);
+  font-size:14px;
 }
 
-nav a {
-  color: var(--text);
-  text-decoration: none;
-  font-size: 14px;
-  cursor: pointer;
-  position: relative;
+/* PAGES */
+.page{
+  min-height:100vh;
+  padding:120px 10%;
+  display:none;
+}
+.page.active{display:block}
+
+/* BUTTON */
+button{
+  padding:12px 28px;
+  border-radius:999px;
+  border:1px solid var(--accent);
+  background:transparent;
+  color:var(--text);
+  cursor:pointer;
+  margin-right:10px;
 }
 
-nav a::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  bottom: -4px;
-  width: 0;
-  height: 2px;
-  background: var(--accent);
-  transition: 0.3s;
+/* CARD */
+.card{
+  background:var(--card);
+  padding:30px;
+  border-radius:20px;
+  max-width:420px;
 }
 
-nav a:hover::after {
-  width: 100%;
+/* POPUP */
+.popup{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  background:#111;
+  border-left:4px solid var(--accent);
+  padding:16px 20px;
+  border-radius:12px;
+  opacity:0;
+  transform:translateY(20px);
+  transition:.3s;
+  z-index:999;
+}
+.popup.show{
+  opacity:1;
+  transform:translateY(0);
 }
 
-/* HEADER */
-header {
-  height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
+/* MODAL */
+.modal-bg{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:1000;
 }
-
-h1 {
-  font-size: clamp(2.5rem, 6vw, 4rem);
+.modal-bg.show{display:flex}
+.modal{
+  background:#111;
+  padding:30px;
+  border-radius:20px;
+  width:90%;
+  max-width:420px;
 }
-
-.typing {
-  color: var(--accent);
-  border-right: 2px solid var(--accent);
-  padding-right: 5px;
-}
-
-button {
-  margin-top: 2rem;
-  padding: 14px 32px;
-  background: transparent;
-  color: var(--text);
-  border: 1px solid var(--accent);
-  border-radius: 999px;
-  cursor: pointer;
-}
-
-section {
-  padding: 120px 10%;
-}
-
-/* CARDS */
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 30px;
-}
-
-.card {
-  background: var(--card);
-  border-radius: 20px;
-  padding: 30px;
-  cursor: pointer;
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.card:hover {
-  box-shadow: 0 20px 60px rgba(139,92,246,0.25);
-}
-
-.card h3 {
-  color: var(--accent);
-  margin-top: 0;
-}
-
-/* FOOTER */
-footer {
-  text-align: center;
-  opacity: 0.6;
-  padding: 40px;
+.modal h3{margin-top:0;color:var(--accent)}
+.close{
+  text-align:right;
+  cursor:pointer;
+  opacity:.6;
 }
 </style>
 </head>
@@ -133,74 +118,77 @@ footer {
 <body>
 
 <nav>
-  <a onclick="go('home')">Home</a>
-  <a onclick="go('features')">Features</a>
-  <a onclick="go('about')">About</a>
-  <a onclick="go('contact')">Contact</a>
+  <a onclick="goPage('home')">Home</a>
+  <a onclick="goPage('service')">Service</a>
+  <a onclick="goPage('about')">About</a>
 </nav>
 
-<header id="home">
-  <div>
-    <h1>เว็บ <span class="typing" id="typing"></span></h1>
-    <p>มินิมอล • คลิกได้ • ลื่น</p>
-    <button onclick="go('features')">ดูฟีเจอร์</button>
-  </div>
-</header>
-
-<section id="features">
-  <h2>Features</h2>
-  <div class="cards">
-    <div class="card" onclick="go('about')">
-      <h3>✨ Interactive</h3>
-      <p>กดแล้วไปต่อได้</p>
-    </div>
-    <div class="card" onclick="go('about')">
-      <h3>🎨 Minimal</h3>
-      <p>เรียบแต่ดูแพง</p>
-    </div>
-    <div class="card" onclick="go('contact')">
-      <h3>📩 Contact</h3>
-      <p>กดเพื่อดูช่องทางติดต่อ</p>
-    </div>
+<!-- HOME -->
+<section id="home" class="page active">
+  <h1>หน้า Home</h1>
+  <div class="card">
+    <p>คลิกปุ่มด้านล่างดูเอฟเฟกต์ 👇</p>
+    <button onclick="showPopup()">Popup</button>
+    <button onclick="openModal()">Modal</button>
+    <button onclick="goPage('service')">เปลี่ยนหน้า</button>
   </div>
 </section>
 
-<section id="about">
-  <h2>About</h2>
-  <p>
-    เว็บนี้เป็นตัวอย่าง Single Page แบบมินิมอล  
-    ทุกส่วนสามารถกดไปยัง section อื่นได้  
-    เหมาะกับ GitHub Pages, Portfolio, Landing Page
-  </p>
+<!-- SERVICE -->
+<section id="service" class="page">
+  <h1>หน้า Service</h1>
+  <p>นี่คือการเปลี่ยนหน้าแบบไม่รีเฟรช</p>
+  <button onclick="goPage('about')">ไป About</button>
 </section>
 
-<section id="contact">
-  <h2>Contact</h2>
-  <p>nareekan@email.com</p>
+<!-- ABOUT -->
+<section id="about" class="page">
+  <h1>หน้า About</h1>
+  <p>โค้ดไฟล์เดียว เหมาะกับ GitHub Pages</p>
+  <button onclick="openModal()">เปิด Modal</button>
 </section>
 
-<footer>
-  © 2025  Web
-</footer>
+<!-- POPUP -->
+<div id="popup" class="popup">
+  🔔 แจ้งเตือนสำเร็จ!
+</div>
+
+<!-- MODAL -->
+<div id="modalBg" class="modal-bg" onclick="closeModal(event)">
+  <div class="modal">
+    <div class="close" onclick="closeModal()">✕</div>
+    <h3>Modal Title</h3>
+    <p>นี่คือ Modal กลางจอ<br>คลิกนอกกล่องหรือกด ESC เพื่อปิด</p>
+  </div>
+</div>
 
 <script>
-/* typing */
-const words = ["สวย", "เรียบ", "ล้ำ"];
-let i = 0, j = 0, del = false;
-const el = document.getElementById("typing");
-
-(function type(){
-  el.textContent = words[i].substring(0,j);
-  if(!del && j++ === words[i].length+1) del = true;
-  else if(del && j-- === 0){ del=false; i=(i+1)%words.length; }
-  setTimeout(type, del?80:120);
-})();
-
-/* navigation */
-function go(id){
-  document.getElementById(id)
-    .scrollIntoView({behavior:'smooth'});
+/* PAGE SWITCH */
+function goPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
 }
+
+/* POPUP */
+function showPopup(){
+  const p=document.getElementById('popup');
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'),2500);
+}
+
+/* MODAL */
+function openModal(){
+  document.getElementById('modalBg').classList.add('show');
+}
+function closeModal(e){
+  if(!e || e.target.id==='modalBg'){
+    document.getElementById('modalBg').classList.remove('show');
+  }
+}
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') closeModal();
+});
 </script>
 
 </body>
