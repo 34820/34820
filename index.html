@@ -22,28 +22,49 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
   background: radial-gradient(circle at top, #1a1a2e, var(--bg));
   color: var(--text);
-  overflow-x: hidden;
 }
 
-/* animated background */
-body::before {
-  content: "";
+/* NAV */
+nav {
   position: fixed;
-  inset: 0;
-  background: linear-gradient(120deg, #8b5cf6, #ec4899, #22d3ee);
-  opacity: 0.07;
-  animation: moveBg 10s linear infinite;
-  z-index: -1;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(12px);
+  border-radius: 999px;
+  padding: 10px 24px;
+  display: flex;
+  gap: 20px;
+  z-index: 999;
 }
 
-@keyframes moveBg {
-  0% { filter: hue-rotate(0deg); }
-  100% { filter: hue-rotate(360deg); }
+nav a {
+  color: var(--text);
+  text-decoration: none;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
 }
 
+nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0;
+  height: 2px;
+  background: var(--accent);
+  transition: 0.3s;
+}
+
+nav a:hover::after {
+  width: 100%;
+}
+
+/* HEADER */
 header {
   height: 100vh;
   display: flex;
@@ -54,18 +75,12 @@ header {
 
 h1 {
   font-size: clamp(2.5rem, 6vw, 4rem);
-  margin-bottom: 1rem;
 }
 
 .typing {
   color: var(--accent);
   border-right: 2px solid var(--accent);
   padding-right: 5px;
-  animation: blink 1s infinite;
-}
-
-@keyframes blink {
-  50% { border-color: transparent; }
 }
 
 button {
@@ -76,30 +91,16 @@ button {
   border: 1px solid var(--accent);
   border-radius: 999px;
   cursor: pointer;
-  position: relative;
-  overflow: hidden;
-}
-
-button::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--accent);
-  opacity: 0;
-  transition: 0.3s;
-}
-
-button:hover::after {
-  opacity: 0.15;
 }
 
 section {
-  padding: 100px 10%;
+  padding: 120px 10%;
 }
 
+/* CARDS */
 .cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 30px;
 }
 
@@ -107,8 +108,8 @@ section {
   background: var(--card);
   border-radius: 20px;
   padding: 30px;
-  backdrop-filter: blur(20px);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .card:hover {
@@ -116,66 +117,90 @@ section {
 }
 
 .card h3 {
-  margin-top: 0;
   color: var(--accent);
+  margin-top: 0;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  opacity: 0.6;
+  padding: 40px;
 }
 </style>
 </head>
 
 <body>
 
-<header>
+<nav>
+  <a onclick="go('home')">Home</a>
+  <a onclick="go('features')">Features</a>
+  <a onclick="go('about')">About</a>
+  <a onclick="go('contact')">Contact</a>
+</nav>
+
+<header id="home">
   <div>
     <h1>เว็บ <span class="typing" id="typing"></span></h1>
-    <p>มินิมอล • ลื่น • มีลูกเล่น</p>
-    <button onclick="scrollToContent()">เริ่มสำรวจ</button>
+    <p>มินิมอล • คลิกได้ • ลื่น</p>
+    <button onclick="go('features')">ดูฟีเจอร์</button>
   </div>
 </header>
 
-<section id="content">
+<section id="features">
+  <h2>Features</h2>
   <div class="cards">
-    <div class="card"> <h3>✨ Smooth</h3><p>ทุกการเคลื่อนไหวลื่นตา</p></div>
-    <div class="card"> <h3>🎨 Minimal</h3><p>เรียบแต่ดูแพง</p></div>
-    <div class="card"> <h3>⚡ Interactive</h3><p>ขยับตามเมาส์</p></div>
-    <div class="card"> <h3>🧠 Smart UI</h3><p>ใช้ลูกเล่นเท่าที่จำเป็น</p></div>
+    <div class="card" onclick="go('about')">
+      <h3>✨ Interactive</h3>
+      <p>กดแล้วไปต่อได้</p>
+    </div>
+    <div class="card" onclick="go('about')">
+      <h3>🎨 Minimal</h3>
+      <p>เรียบแต่ดูแพง</p>
+    </div>
+    <div class="card" onclick="go('contact')">
+      <h3>📩 Contact</h3>
+      <p>กดเพื่อดูช่องทางติดต่อ</p>
+    </div>
   </div>
 </section>
 
+<section id="about">
+  <h2>About</h2>
+  <p>
+    เว็บนี้เป็นตัวอย่าง Single Page แบบมินิมอล  
+    ทุกส่วนสามารถกดไปยัง section อื่นได้  
+    เหมาะกับ GitHub Pages, Portfolio, Landing Page
+  </p>
+</section>
+
+<section id="contact">
+  <h2>Contact</h2>
+  <p>nareekan@email.com</p>
+</section>
+
+<footer>
+  © 2025  Web
+</footer>
+
 <script>
-/* typing effect */
+/* typing */
 const words = ["สวย", "เรียบ", "ล้ำ"];
-let i = 0, j = 0, isDeleting = false;
+let i = 0, j = 0, del = false;
 const el = document.getElementById("typing");
 
-function type() {
-  el.textContent = words[i].substring(0, j);
-  if (!isDeleting && j++ === words[i].length + 1) {
-    isDeleting = true;
-  } else if (isDeleting && j-- === 0) {
-    isDeleting = false;
-    i = (i + 1) % words.length;
-  }
-  setTimeout(type, isDeleting ? 80 : 120);
-}
-type();
+(function type(){
+  el.textContent = words[i].substring(0,j);
+  if(!del && j++ === words[i].length+1) del = true;
+  else if(del && j-- === 0){ del=false; i=(i+1)%words.length; }
+  setTimeout(type, del?80:120);
+})();
 
-/* scroll */
-function scrollToContent() {
-  document.getElementById("content").scrollIntoView({behavior:"smooth"});
+/* navigation */
+function go(id){
+  document.getElementById(id)
+    .scrollIntoView({behavior:'smooth'});
 }
-
-/* card parallax */
-document.querySelectorAll(".card").forEach(card => {
-  card.addEventListener("mousemove", e => {
-    const r = card.getBoundingClientRect();
-    const x = e.clientX - r.left - r.width / 2;
-    const y = e.clientY - r.top - r.height / 2;
-    card.style.transform = `rotateX(${ -y/20 }deg) rotateY(${ x/20 }deg)`;
-  });
-  card.addEventListener("mouseleave", () => {
-    card.style.transform = "rotateX(0) rotateY(0)";
-  });
-});
 </script>
 
 </body>
